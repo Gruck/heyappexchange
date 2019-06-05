@@ -13,6 +13,9 @@
             <componentName>flexipage:richText</componentName>
         </componentInstances>
         <componentInstances>
+            <componentName>heyGeneralInfo</componentName>
+        </componentInstances>
+        <componentInstances>
             <componentInstanceProperties>
                 <name>decorate</name>
                 <value>true</value>

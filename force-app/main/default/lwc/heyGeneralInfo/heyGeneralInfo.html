@@ -1,0 +1,12 @@
+<template>
+    <lightning-card title="GeneralInfo" icon-name="custom:custom14">
+        <div class="slds-m-around_medium">
+            <p>Hello, {greeting}!</p>
+            <p>Here are some info about your Hey Account</p>
+            <lightning-input label="Name" value={greeting} onchange={changeHandler}></lightning-input>
+        </div>
+        <div class="slds-m-arround_medium">
+            <lightning-button label="get Data From Server" onclick={buttonClickHandler}></lightning-button>
+        </div>
+    </lightning-card>
+</template>
