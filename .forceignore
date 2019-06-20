@@ -10,3 +10,15 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
+
+# Ignore app switcher causing issues
+AppSwitcher.appMenu
+
+# Ingnore connected app
+HeyServerStg.connectedApp
+
+# Ignore layouts
+**.layout
+
+# Ignore Profile. Should work with permisison sets
+**.profile
