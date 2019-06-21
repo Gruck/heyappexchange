@@ -1,10 +1,11 @@
 {
   "orgName": "Demo Company",
-  "edition": "Enterprise",
+  "edition": "Developer",
   "features": [],
   "settings": {
     "orgPreferenceSettings": {
       "s1DesktopEnabled": true
     }
-  }
+  },
+  "language": "en_US"
 }
