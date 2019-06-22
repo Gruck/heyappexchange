@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hey_Id__c</fullName>
+    <businessStatus>Active</businessStatus>
+    <description>Fields to store id from Hey Service</description>
+    <externalId>true</externalId>
+    <label>Hey Id</label>
+    <length>64</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
