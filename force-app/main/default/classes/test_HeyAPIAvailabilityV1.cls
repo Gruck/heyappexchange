@@ -39,7 +39,7 @@ public class test_HeyAPIAvailabilityV1 {
         dispo.OwnerId=user.id;
         dispo.Subject='test disponibility event';
         dispo.durationInMinutes=120;
-        dispo.ActivityDateTime = System.now();
+        dispo.ActivityDateTime = System.now().addHours(1);
         dispo.Hey_Event_Type__c = 'Available Demo Slots';
 
         insert dispo;

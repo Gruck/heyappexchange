@@ -10,28 +10,32 @@ global without sharing class HeyAPIAvailabilityV1 {
 
 
         //get all records of events with hey event type == slot where enddate > now
-        List<Event> availabilitySlots = [SELECT Id, OwnerId, Owner.Name, Owner.Type, ActivityDate, ActivityDateTime, 
-        StartDateTime, EndDateTime, IsAllDayEvent, DurationInMinutes, Hey_Event_Type__c FROM event WHERE Hey_Event_Type__c = 'Available Demo Slots' ORDER BY StartDateTime];
+        DateTime currentTime = System.now();
+        List<Event> availabilitySlots = [SELECT Id, OwnerId, Owner.Name, Owner.FirstName, Owner.Type, ActivityDate, ActivityDateTime, 
+        StartDateTime, EndDateTime, IsAllDayEvent, DurationInMinutes, Hey_Event_Type__c FROM event WHERE Hey_Event_Type__c = 'Available Demo Slots' and EndDateTime > :currentTime ORDER BY StartDateTime];
 
+    
         // get all records of events with hey event type == demo where enddate > now 
         List<Event> bookedEvents = onlyDemosEvents ? 
                                         [SELECT Id, OwnerId, Owner.Name, Owner.Type, ActivityDate, ActivityDateTime, 
                                             StartDateTime, EndDateTime, IsAllDayEvent, DurationInMinutes, Hey_Event_Type__c 
-                                            FROM event WHERE Hey_Event_Type__c = 'Prospect Demo'  ORDER BY StartDateTime]
+                                            FROM event WHERE Hey_Event_Type__c = 'Prospect Demo' and EndDateTime > :currentTime  ORDER BY StartDateTime]
                                         : 
                                         [SELECT Id, OwnerId, Owner.Name, Owner.Type, ActivityDate, ActivityDateTime, 
                                             StartDateTime, EndDateTime, IsAllDayEvent, DurationInMinutes, Hey_Event_Type__c 
-                                            FROM event ORDER BY StartDateTime];
+                                            FROM event WHERE EndDateTime > :currentTime ORDER BY StartDateTime];
 
         Map<ID, List<Event>> bookedEventsByUser = new Map<ID,List<Event>>();
+        List<ID> userIds = new List<ID>();
 
         for(Event event : bookedEvents){
             if(bookedEventsByUser.get(event.OwnerId) == null){
                 bookedEventsByUser.put(event.OwnerId, new List<Event>());
             }
             bookedEventsByUser.get(event.OwnerId).add(event);
+            
         }
-
+      
 
         // split this into alloted time from custom metadata info
         HeyAPIAvailabilityV1Ret ret = new HeyAPIAvailabilityV1Ret();
@@ -41,9 +45,15 @@ global without sharing class HeyAPIAvailabilityV1 {
             Integer nbPossibleSlots = event.DurationInMinutes / demoDuration;//integer division
             for(Integer i = 0; i < nbPossibleSlots; i++){
                 System.debug('processing slot : ' + i);
+
                 
-                HeyAPIAvailabilityV1RetSlot slot = new HeyAPIAvailabilityV1RetSlot(event.StartDateTime.addMinutes( demoDuration * i) , event.StartDateTime.addMinutes(  demoDuration * (i+1)), event.OwnerId);
                 
+                HeyAPIAvailabilityV1RetSlot slot = new HeyAPIAvailabilityV1RetSlot(event.StartDateTime.addMinutes( demoDuration * i) , event.StartDateTime.addMinutes(  demoDuration * (i+1)), event.OwnerId, event.Owner.FirstName);
+                
+                if(slot.starttime < currentTime){
+                    continue;
+                }
+
                 //verify the user isn't already booked on anotehr demo at that time
                 if(bookedEventsByUser.get(event.OwnerId) == null){
                     ret.slots.add(slot);
@@ -80,11 +90,13 @@ global without sharing class HeyAPIAvailabilityV1 {
         Datetime starttime;
         Datetime endtime;
         ID userId;
+        String userFirstName;
 
-        public HeyAPIAvailabilityV1RetSlot(Datetime starttime, Datetime endtime, ID userId){
+        public HeyAPIAvailabilityV1RetSlot(Datetime starttime, Datetime endtime, ID userId, String userFirstName){
             this.starttime = starttime;
             this.endtime = endtime;
             this.userId = userId;
+            this.userFirstName = userFirstName;
         }
     }
 }
