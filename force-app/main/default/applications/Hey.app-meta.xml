@@ -21,6 +21,9 @@
     <tabs>standard-home</tabs>
     <tabs>standard-Opportunity</tabs>
     <tabs>standard-Lead</tabs>
+    <tabs>standard-Event</tabs>
+    <tabs>standard-report</tabs>
+    <tabs>standard-Dashboard</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Hey_UtilityBar</utilityBar>
 </CustomApplication>
